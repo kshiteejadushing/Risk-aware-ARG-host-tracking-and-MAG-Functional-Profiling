@@ -1,6 +1,4 @@
-cd /home/kshiteeja/shotgun_practice
 
-cat > README.md <<'EOF'
 # Shotgun Metagenomics Pipeline for ARG Host Tracking and MAG Functional Profiling
 
 This repository contains a reproducible shotgun metagenomics workflow for antimicrobial resistance gene (ARG) detection, ARG host tracking, metagenome-assembled genome (MAG) recovery, taxonomic classification, functional annotation, and integrated risk/bioremediation interpretation.
