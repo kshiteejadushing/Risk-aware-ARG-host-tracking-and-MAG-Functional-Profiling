@@ -38,35 +38,6 @@ This is useful for studying antimicrobial resistance, environmental resistomes, 
 
 ---
 
-## Repository Structure
-
-shotgun_practice/
-├── README.md
-├── .gitignore
-├── scripts/
-│   ├── 00_check_setup.sh
-│   ├── 01_read_qc.sh
-│   ├── 02_assembly.sh
-│   ├── 03_gene_prediction.sh
-│   ├── 04_cdhit.sh
-│   ├── 05_rgi_arg_detection.sh
-│   ├── 06_prepare_metawrap_reads.sh
-│   ├── 07_metawrap_binning.sh
-│   ├── 08_bin_refinement.sh
-│   ├── 09_checkm2.sh
-│   ├── 10_gtdbtk_classify_bins.sh
-│   ├── 11_dram_annotate.sh
-│   ├── 12_dram_distill.sh
-│   ├── 13_make_ARG_gene_contig_bin_taxonomy_evidence.py
-│   ├── 14_make_MAG_DRAM_pathway_metabolism.py
-│   └── 15_make_MAG_risk_bioremediation_scoring.py
-└── Notes/
-    └── project notes and methodology documents
-
-Large files such as raw reads, databases, intermediate files, and results are excluded from this repository.
-
----
-
 ## Input Data
 
 The pipeline expects paired-end shotgun metagenomic reads.
