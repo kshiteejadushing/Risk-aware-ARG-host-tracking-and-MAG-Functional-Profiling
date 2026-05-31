@@ -179,21 +179,21 @@ Each script is designed to be run with a sample ID.
 
 Example:
 
-bash scripts/01_read_qc.sh ERR12510647
-bash scripts/02_assembly.sh ERR12510647
-bash scripts/03_gene_prediction.sh ERR12510647
-bash scripts/04_cdhit.sh ERR12510647
-bash scripts/05_rgi_arg_detection.sh ERR12510647
-bash scripts/06_prepare_metawrap_reads.sh ERR12510647
-bash scripts/07_metawrap_binning.sh ERR12510647
-bash scripts/08_bin_refinement.sh ERR12510647
-bash scripts/09_checkm2.sh ERR12510647
-bash scripts/10_gtdbtk_classify_bins.sh ERR12510647
-bash scripts/11_dram_annotate.sh ERR12510647
-bash scripts/12_dram_distill.sh ERR12510647
-python scripts/13_make_ARG_gene_contig_bin_taxonomy_evidence.py ERR12510647
-python scripts/14_make_MAG_DRAM_pathway_metabolism.py ERR12510647
-python scripts/15_make_MAG_risk_bioremediation_scoring.py ERR12510647
+- bash scripts/01_read_qc.sh ERR12510647
+- bash scripts/02_assembly.sh ERR12510647
+- bash scripts/03_gene_prediction.sh ERR12510647
+- bash scripts/04_cdhit.sh ERR12510647
+- bash scripts/05_rgi_arg_detection.sh ERR12510647
+- bash scripts/06_prepare_metawrap_reads.sh ERR12510647
+- bash scripts/07_metawrap_binning.sh ERR12510647
+- bash scripts/08_bin_refinement.sh ERR12510647
+- bash scripts/09_checkm2.sh ERR12510647
+- bash scripts/10_gtdbtk_classify_bins.sh ERR12510647
+- bash scripts/11_dram_annotate.sh ERR12510647
+- bash scripts/12_dram_distill.sh ERR12510647
+- python scripts/13_make_ARG_gene_contig_bin_taxonomy_evidence.py ERR12510647
+- python scripts/14_make_MAG_DRAM_pathway_metabolism.py ERR12510647
+- python scripts/15_make_MAG_risk_bioremediation_scoring.py ERR12510647
 
 Before running the workflow, check setup:
 
