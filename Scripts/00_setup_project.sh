@@ -31,13 +31,12 @@ set -u
 # USER CONFIGURATION
 ###############################################################################
 
-PROJECT="/mnt/e/kshiteeja/shotgun_project"
+PDB_ROOT="$PROJECT/Databases"
 
-DB_ROOT="/mnt/e/metawrap_databases"
-KRAKEN2_DB="/mnt/e/metawrap_databases/kraken2"
-GTDBTK_DB="/mnt/e/metawrap_databases/GTDBTK/release232"
-CHECKM2_DB="/mnt/e/metawrap_databases/checkm2_database"
-DRAM_DB="/mnt/e/metawrap_databases/DRAM"
+KRAKEN2_DB="$DB_ROOT/kraken2"
+GTDBTK_DB="$DB_ROOT/GTDBTK/release232"
+CHECKM2_DB="$DB_ROOT/checkm2_database"
+DRAM_DB="$DB_ROOT/DRAM"
 
 ###############################################################################
 # COLORS
@@ -224,7 +223,7 @@ MAIN_DIRS=(
     "data"
     "data/raw"
     "data/clean"
-    "data/databases"
+    "Databases"
     "results"
     "results/qc"
     "results/assembly"
