@@ -1,0 +1,158 @@
+# =========================================================
+# Shotgun Metagenomics Project .gitignore
+# Keep GitHub repo limited to scripts, README, LICENSE, docs
+# Do not upload raw data, databases, results, or manuscript files
+# =========================================================
+
+
+# -------------------------
+# Raw and processed data
+# -------------------------
+data/raw/
+data/clean/
+data/metawrap_reads/
+data/databases/
+Databases/
+databases/
+
+
+# -------------------------
+# Analysis outputs
+# -------------------------
+results/
+logs/
+final_tables/
+output/
+outputs/
+
+
+# -------------------------
+# Unpublished notes, manuscript, figures, tables
+# -------------------------
+Notes/
+notes/
+manuscript/
+Manuscript/
+figures/
+Figures/
+tables/
+Tables/
+*.docx
+*.doc
+*.pdf
+*.pptx
+*.xlsx
+
+
+# -------------------------
+# Large sequencing and bioinformatics files
+# -------------------------
+*.fastq
+*.fastq.gz
+*.fq
+*.fq.gz
+*.fasta
+*.fa
+*.fna
+*.faa
+*.ffn
+*.gff
+*.gff3
+*.gbk
+*.sam
+*.bam
+*.bai
+*.cram
+*.vcf
+*.vcf.gz
+
+
+# -------------------------
+# Database/index/model files
+# -------------------------
+*.bt2
+*.bt2l
+*.mmi
+*.dmnd
+*.hmm
+*.h3f
+*.h3i
+*.h3m
+*.h3p
+*.idx
+*.k2d
+*.sqlite
+*.sqlite3
+*.db
+
+
+# -------------------------
+# Compressed archives
+# -------------------------
+*.tar
+*.tar.gz
+*.tgz
+*.zip
+*.gz
+*.bz2
+*.xz
+*.7z
+*.rar
+
+
+# -------------------------
+# Temporary/intermediate files
+# -------------------------
+tmp/
+temp/
+work/
+work_files/
+*.tmp
+*.temp
+*.bak
+*.swp
+*.swo
+
+
+# -------------------------
+# Python files
+# -------------------------
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.ipynb_checkpoints/
+
+
+# -------------------------
+# R files
+# -------------------------
+.Rhistory
+.RData
+.Rproj.user/
+
+
+# -------------------------
+# Conda/environment files
+# Keep example environment files if needed
+# -------------------------
+.conda/
+env/
+envs/
+venv/
+.venv/
+
+
+# -------------------------
+# Editor/system files
+# -------------------------
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+
+# -------------------------
+# Keep placeholder files
+# -------------------------
+!.gitkeep
