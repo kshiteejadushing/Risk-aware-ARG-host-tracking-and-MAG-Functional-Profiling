@@ -76,7 +76,7 @@ The pipeline aims to answer:
 
 | Step | Script | Purpose |
 |---|---|---|
-| 00 | 00_check_setup.sh | Checks folder structure, conda environments, and required tools |
+| 00 | 00_setup_project.sh | Checks folder structure, conda environments, and required tools |
 | 01 | 01_read_qc.sh | Performs read quality control and generates cleaned reads |
 | 02 | 02_assembly.sh | Performs metagenomic assembly from cleaned reads |
 | 03 | 03_gene_prediction.sh | Predicts genes from assembled contigs |
