@@ -127,6 +127,56 @@ def extract_arg_gene_id(orf_id):
     return str(orf_id).split("#")[0].strip().split()[0]
 
 
+def extract_contig_from_orf_id(orf_id):
+    """
+    Extract contig ID from Prodigal-style ORF_ID when RGI Contig is blank.
+
+    Examples:
+        k141_548087_1 # 90 # 1349 # -1 # ID=210_1  ->  k141_548087
+        k141_1215_47 # 32884 # 34356 # 1          ->  k141_1215
+
+    Logic:
+        RGI was run on predicted genes. The final underscore-number is the
+        ORF/gene number on the contig, not part of the contig ID.
+    """
+
+    gene_id = extract_arg_gene_id(orf_id)
+
+    if gene_id == "":
+        return ""
+
+    parts = gene_id.rsplit("_", 1)
+
+    if len(parts) == 2 and parts[1].isdigit():
+        return parts[0]
+
+    return gene_id
+
+
+def parse_orf_field(orf_id, field_index):
+    """
+    Recover start, stop, or orientation from Prodigal-style ORF_ID.
+
+    Example:
+        k141_548087_1 # 90 # 1349 # -1 # ID=210_1
+
+    field_index:
+        1 = start
+        2 = stop
+        3 = orientation / strand
+    """
+
+    if pd.isna(orf_id):
+        return ""
+
+    parts = [x.strip() for x in str(orf_id).split("#")]
+
+    if len(parts) > field_index:
+        return parts[field_index].strip()
+
+    return ""
+
+
 # =============================================================================
 # FASTA PARSING
 # =============================================================================
@@ -612,7 +662,9 @@ def main():
 
     log("Creating final Table 1")
 
-    output = pd.DataFrame()
+    # Keep the same index as arg_df so scalar/sample assignments and later
+    # row-wise fallback parsing stay aligned with the ARG table.
+    output = pd.DataFrame(index=arg_df.index)
 
     output["sample_id"] = sample
 
@@ -623,6 +675,40 @@ def main():
     output["arg_start"] = arg_df[col_start].fillna("")
     output["arg_end"] = arg_df[col_stop].fillna("")
     output["orientation"] = arg_df[col_orientation].fillna("") if col_orientation else ""
+
+    # Some RGI outputs keep Contig/Start/Stop/Orientation blank when RGI was
+    # run on predicted proteins/genes. In that case, the information is inside
+    # ORF_ID, for example:
+    #   k141_548087_1 # 90 # 1349 # -1 # ID=210_1
+    # We recover:
+    #   contig      = k141_548087
+    #   start       = 90
+    #   stop/end    = 1349
+    #   orientation = -1
+    missing_contig_mask = output["arg_contig_id"].astype(str).str.strip().isin(["", "nan", "None", "NA", "N/A"])
+    missing_start_mask = output["arg_start"].astype(str).str.strip().isin(["", "nan", "None", "NA", "N/A"])
+    missing_end_mask = output["arg_end"].astype(str).str.strip().isin(["", "nan", "None", "NA", "N/A"])
+    missing_orientation_mask = output["orientation"].astype(str).str.strip().isin(["", "nan", "None", "NA", "N/A"])
+
+    output.loc[missing_contig_mask, "arg_contig_id"] = (
+        arg_df.loc[missing_contig_mask, col_orf]
+        .apply(extract_contig_from_orf_id)
+    )
+
+    output.loc[missing_start_mask, "arg_start"] = (
+        arg_df.loc[missing_start_mask, col_orf]
+        .apply(lambda x: parse_orf_field(x, 1))
+    )
+
+    output.loc[missing_end_mask, "arg_end"] = (
+        arg_df.loc[missing_end_mask, col_orf]
+        .apply(lambda x: parse_orf_field(x, 2))
+    )
+
+    output.loc[missing_orientation_mask, "orientation"] = (
+        arg_df.loc[missing_orientation_mask, col_orf]
+        .apply(lambda x: parse_orf_field(x, 3))
+    )
 
     output["arg_name"] = arg_df[col_best_aro].fillna("")
     output["aro_accession"] = arg_df[col_aro].fillna("") if col_aro else ""

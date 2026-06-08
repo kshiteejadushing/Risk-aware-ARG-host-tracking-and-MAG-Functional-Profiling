@@ -1,12 +1,15 @@
 #!/bin/bash
 # =============================================================================
 # Script : 09_checkm2.sh
-# Purpose: Assess quality of refined MAGs using CheckM2.
+# Purpose: Assess quality of refined candidate MAGs using CheckM2.
 #          Produces completeness/contamination scores and creates the final
 #          good-MAG FASTA folder for downstream GTDB-Tk and DRAM.
 #
 # Input:
-#   results/bin_refinement/<SAMPLE_ID>/metawrap_75_10_bins/
+#   results/bin_refinement/<SAMPLE_ID>/binsAB/
+#
+# This input folder is produced by:
+#   08_bin_refinement.sh
 #
 # Main outputs:
 #   results/checkm2/<SAMPLE_ID>/quality_report.tsv
@@ -67,11 +70,13 @@ CONDA_ENV="checkm2_env"
 
 PROJECT=/mnt/e/kshiteeja/shotgun_project
 
-# These thresholds must match Script 08 bin_refinement.
+# These are the final MAG-quality thresholds.
 COMPLETENESS=75
 CONTAMINATION=10
 
-BINS=$PROJECT/results/bin_refinement/$SAMPLE/metawrap_${COMPLETENESS}_${CONTAMINATION}_bins
+# Input refined candidate bins from Script 08.
+# In your run, these are Refined_*.fa files produced by metaWRAP from MetaBAT2 + MaxBin2.
+BINS=$PROJECT/results/bin_refinement/$SAMPLE/binsAB
 
 CHECKM2_OUT=$PROJECT/results/checkm2/$SAMPLE
 MAGS_OUT=$PROJECT/results/MAGs/$SAMPLE
@@ -79,7 +84,7 @@ GOOD_MAG_FASTA_DIR=$MAGS_OUT/good_MAGs_${COMPLETENESS}_${CONTAMINATION}
 
 LOGS=$PROJECT/logs
 
-# Your updated database location
+# CheckM2 database location
 CHECKM2_DB_DIR=/mnt/e/Databases/CHECKM2
 
 mkdir -p "$CHECKM2_OUT" "$MAGS_OUT" "$GOOD_MAG_FASTA_DIR" "$LOGS"
@@ -155,7 +160,7 @@ log "CheckM2 found: $CHECKM2_VERSION"
 # SECTION 7 — INPUT BIN CHECKS
 # ─────────────────────────────────────────────────────────────────────────────
 
-log "Checking refined MAG input folder"
+log "Checking refined candidate MAG input folder"
 
 if [ ! -d "$BINS" ]; then
     echo "[ERROR] Refined bins folder not found:" | tee -a "$LOG"
@@ -164,25 +169,31 @@ if [ ! -d "$BINS" ]; then
     echo "Run bin refinement first:" | tee -a "$LOG"
     echo "        bash scripts/08_bin_refinement.sh $SAMPLE" | tee -a "$LOG"
     echo "" | tee -a "$LOG"
-    echo "This script expects:" | tee -a "$LOG"
-    echo "        metawrap_${COMPLETENESS}_${CONTAMINATION}_bins" | tee -a "$LOG"
+    echo "This script expects refined bins here:" | tee -a "$LOG"
+    echo "        results/bin_refinement/$SAMPLE/binsAB/" | tee -a "$LOG"
     exit 1
 fi
 
 # Auto-detect bin FASTA extension
-if find "$BINS" -maxdepth 1 -name "*.fa" | grep -q .; then
+FA_COUNT=$(find "$BINS" -maxdepth 1 -type f -name "*.fa" | wc -l)
+FASTA_COUNT=$(find "$BINS" -maxdepth 1 -type f -name "*.fasta" | wc -l)
+FNA_COUNT=$(find "$BINS" -maxdepth 1 -type f -name "*.fna" | wc -l)
+
+if [ "$FA_COUNT" -gt 0 ]; then
     EXT="fa"
-elif find "$BINS" -maxdepth 1 -name "*.fasta" | grep -q .; then
+elif [ "$FASTA_COUNT" -gt 0 ]; then
     EXT="fasta"
-elif find "$BINS" -maxdepth 1 -name "*.fna" | grep -q .; then
+elif [ "$FNA_COUNT" -gt 0 ]; then
     EXT="fna"
 else
     echo "[ERROR] No bin FASTA files found in:" | tee -a "$LOG"
     echo "        $BINS" | tee -a "$LOG"
     echo "Expected files ending in .fa, .fasta, or .fna" | tee -a "$LOG"
+    echo "" | tee -a "$LOG"
+    echo "Debug file listing:" | tee -a "$LOG"
+    find "$BINS" -maxdepth 1 -type f | head -20 | tee -a "$LOG"
     exit 1
 fi
-
 BIN_COUNT=$(find "$BINS" -maxdepth 1 -name "*.${EXT}" | wc -l)
 
 if [ "$BIN_COUNT" -lt 1 ]; then

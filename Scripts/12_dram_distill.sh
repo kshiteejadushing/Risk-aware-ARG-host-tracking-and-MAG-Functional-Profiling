@@ -148,7 +148,7 @@ if [ -d "$DISTILL_OUT" ]; then
     rm -rf "$DISTILL_OUT"
 fi
 
-mkdir -p "$DISTILL_OUT"
+
 
 # ─────────────────────────────────────────────────────────────────────────────
 # SECTION 8 — RUN DRAM DISTILL

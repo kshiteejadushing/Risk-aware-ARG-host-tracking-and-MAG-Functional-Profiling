@@ -84,7 +84,7 @@ THREADS=16
 MIN_CONTIG_SIZE=1000
 
 # Your general database folder
-DATABASE_ROOT=/mnt/e/Databases
+DATABASE_ROOT=/mnt/e/Databases/DRAM_processed
 
 mkdir -p "$DRAM_OUT" "$LOGS"
 
@@ -204,7 +204,7 @@ else
 fi
 
 # ─────────────────────────────────────────────────────────────────────────────
-# SECTION 7 — DRAM DATABASE CONFIG CHECK
+# SECTION 7A — DRAM DATABASE CONFIG CHECK
 # ─────────────────────────────────────────────────────────────────────────────
 
 log "Checking DRAM database configuration"
@@ -227,6 +227,42 @@ if [ "$CONFIG_EXIT" -ne 0 ]; then
 fi
 
 log "DRAM config printed successfully"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# SECTION 7B — EXPECTED DRAM DATABASE FILE CHECK
+# ─────────────────────────────────────────────────────────────────────────────
+
+log "Checking expected DRAM database files under: $DATABASE_ROOT"
+
+REQUIRED_DRAM_FILES=(
+    "$DATABASE_ROOT/kofam_profiles.hmm"
+    "$DATABASE_ROOT/kofam_ko_list.tsv"
+    "$DATABASE_ROOT/pfam.mmspro"
+    "$DATABASE_ROOT/dbCAN.hmm"
+    "$DATABASE_ROOT/Pfam-A.hmm.dat.gz"
+    "$DATABASE_ROOT/CAZyDB.08062022.fam-activities.txt"
+    "$DATABASE_ROOT/genome_summary_form.tsv"
+    "$DATABASE_ROOT/module_step_form.tsv"
+    "$DATABASE_ROOT/etc_module_database.tsv"
+    "$DATABASE_ROOT/function_heatmap_form.tsv"
+    "$DATABASE_ROOT/amg_database.tsv"
+)
+
+for db_file in "${REQUIRED_DRAM_FILES[@]}"; do
+    if [ -s "$db_file" ]; then
+        log "OK: $db_file"
+    else
+        log "[WARN] Missing or empty expected DRAM file: $db_file"
+    fi
+done
+
+MEROPS_PREFIX="$DATABASE_ROOT/merops_mmseqs/peptidase"
+
+if ls "${MEROPS_PREFIX}"* &>/dev/null; then
+    log "OK: MEROPS MMseqs database prefix found: $MEROPS_PREFIX"
+else
+    log "[WARN] MEROPS MMseqs database prefix not found: $MEROPS_PREFIX"
+fi
 
 # ─────────────────────────────────────────────────────────────────────────────
 # SECTION 8 — RESUME LOGIC
@@ -254,14 +290,16 @@ fi
 # SECTION 9 — RUN DRAM ANNOTATE
 # ─────────────────────────────────────────────────────────────────────────────
 
+INPUT_FASTA_PATTERN="${GOOD_MAGS}/*.${EXT}"
+
 log "STEP 1/2 — Running DRAM.py annotate on CheckM2-good MAGs"
-log "Input : $GOOD_MAGS"
-log "Output: $ANNOTATION_OUT"
+log "Input FASTA pattern: $INPUT_FASTA_PATTERN"
+log "Output             : $ANNOTATION_OUT"
 
 set +e
 
 conda run -n "$CONDA_ENV" DRAM.py annotate \
-    -i "$GOOD_MAGS"/*.${EXT} \
+    -i "$INPUT_FASTA_PATTERN" \
     -o "$ANNOTATION_OUT" \
     --threads "$THREADS" \
     --min_contig_size "$MIN_CONTIG_SIZE" \

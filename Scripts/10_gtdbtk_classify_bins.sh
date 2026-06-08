@@ -77,7 +77,7 @@ LOGS=$PROJECT/logs
 LOG=$LOGS/${SAMPLE}_10_gtdbtk.log
 
 # Your updated database location
-export GTDBTK_DATA_PATH=/mnt/e/Databases/GTDBTK
+export GTDBTK_DATA_PATH=/mnt/e/Databases/GTDBTK/release232
 
 THREADS=16
 
