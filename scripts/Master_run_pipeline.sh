@@ -339,9 +339,9 @@ run_step "03" "Gene prediction" \
 # 04. CD-HIT clustering
 # ----------------------------------------------------------
 
-run_step "04" "Gene clustering using CD-HIT" \
-         "04_cdhit.sh" \
-         "required"
+#run_step "04" "Gene clustering using CD-HIT" \
+#         "04_cdhit.sh" \
+#          "required"
 
 
 # ----------------------------------------------------------
