@@ -286,7 +286,7 @@ run_step() {
             echo "This is a required step. Pipeline stopped." | tee -a "$MASTER_LOG"
             echo | tee -a "$MASTER_LOG"
             echo "After fixing the issue, run this master script again:" | tee -a "$MASTER_LOG"
-            echo "bash $SCRIPTS_DIR/MASTER_run_pipeline.sh" | tee -a "$MASTER_LOG"
+            echo "bash $SCRIPTS_DIR/Master_run_pipeline.sh" | tee -a "$MASTER_LOG"
             echo | tee -a "$MASTER_LOG"
             echo "Completed steps will be skipped automatically." | tee -a "$MASTER_LOG"
 
